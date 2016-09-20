@@ -1,0 +1,23 @@
+{
+  "name": "electron-tinypng",
+  "version": "0.1.0",
+  "description": "an electron application to help you compress png/jpg using tinypng",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/xinsnake/electron-tinypng.git"
+  },
+  "keywords": [
+    "png",
+    "jpg",
+    "compression",
+    "tinypng",
+    "tinyjpg"
+  ],
+  "author": "Xinyun ZHOU <me@xyzhou.com>",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/xinsnake/electron-tinypng#readme"
+}
