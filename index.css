@@ -1,0 +1,25 @@
+body, html {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+.mui--text-body2, h5 {
+    font-weight: 600;
+}
+.mui-textfield {
+    margin-bottom: 5px;
+}
+.mui-container-fluid {
+    max-width: 600px;
+}
+.mui-panel {
+    padding: 30px 30px 20px;
+}
+.dragover {
+    background: #eee;
+}
+#toast-container .toast {
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+#toast-container .toast:hover {
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
+}

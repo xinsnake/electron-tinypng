@@ -5,33 +5,14 @@
         <title>Electron Tinypng</title>
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet">
         <link rel="stylesheet" href="./node_modules/angular/angular-csp.css">
+        <link rel="stylesheet" href="./node_modules/angular-toastr/dist/angular-toastr.css">
         <link rel="stylesheet" href="./node_modules/muicss/dist/css/mui.css">
-
-        <style>
-            body, html {
-                font-family: 'Source Sans Pro', sans-serif;
-            }
-            .mui--text-body2, h5 {
-                font-weight: 600;
-            }
-            .mui-textfield {
-                margin-bottom: 5px;
-            }
-            .mui-container-fluid {
-                max-width: 600px;
-            }
-            .mui-panel {
-                padding: 30px 30px 20px;
-            }
-            .dragover {
-                background: #eee;
-            }
-        </style>
-
+        <link rel="stylesheet" href="./index.css">
         <script src="./node_modules/lodash/lodash.js"></script>
         <script src="./node_modules/jquery/dist/jquery.js"></script>
         <script src="./node_modules/angular/angular.js"></script>
         <script src="./node_modules/ng-file-upload/dist/ng-file-upload.js"></script>
+        <script src="./node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script>
         <script src="./node_modules/muicss/dist/angular/mui-angular.js"></script>
         <script src="./index.js"></script>
     </head>
@@ -58,13 +39,13 @@
                 <form ng-show="settingsOn">
                     <mui-row>
                         <mui-col xs="6">
-                            <mui-input ng-model="apiKey" label="TinyPNG API Key *" float-label required></mui-input>
+                            <mui-input ng-model="settings.apiKey" label="TinyPNG API Key *" type="text" required ng-disabled="savingSettings"></mui-input>
                         </mui-col>
                         <mui-col xs="6">
-                            <mui-input ng-model="numComp" label="No. of Compressions per Image *" type="number" float-label requred></mui-input>
+                            <mui-input ng-model="settings.numComp" label="No. of Compressions per Image *" type="number" requred ng-disabled="savingSettings"></mui-input>
                         </mui-col>
                     </mui-row>
-                    <mui-button color="primary">Save</mui-button>
+                    <mui-button color="primary" ng-click="saveSettings()">Save</mui-button>
                 </form>
             </mui-panel>
         </mui-container>

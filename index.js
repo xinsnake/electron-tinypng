@@ -1,16 +1,84 @@
-let app = angular.module('electronTinypng', ['mui', 'ngFileUpload'])
+const {ipcRenderer} = require('electron')
 
-app.controller('mainController', ($scope) => {
+document.addEventListener('dragover', (event) => {
+    event.preventDefault()
+    return false
+}, false)
 
+document.addEventListener('drop', (event) => {
+    event.preventDefault()
+    return false
+}, false)
+
+let app = angular.module('electronTinypng', ['mui', 'ngFileUpload', 'toastr'])
+
+app.config((toastrConfig) => {
+    angular.extend(toastrConfig, {
+        autoDismiss: true,
+        closeButton: true
+    })
+})
+
+app.controller('mainController', ($scope, toastr) => {
+
+    // usage number
+    $scope.usage = 'N/A'
+
+    // upload handler
+    $scope.uploadFiles = (files) => {
+        console.log(files)
+    }
+
+    // settings ui
     $scope.settingsOn = false
 
     $scope.toggleSettings = () => {
         $scope.settingsOn = !$scope.settingsOn
     }
 
-    $scope.usage = 'N/A'
+    // settings
+    $scope.settings = {}
+    $scope.savingSettings = false
 
-    $scope.uploadFiles = (files) => {
-        console.log(files)
+    ipcRenderer.on('async-load-settings-reply', (event, arg) => {
+        if (arg.success) {
+            $scope.settings = arg.data
+        } else {
+            handleError(arg.data)
+        }
+    })
+
+    $scope.loadSettings = () => {
+        ipcRenderer.send('async-load-settings')
     }
+
+    ipcRenderer.on('async-save-settings-reply', (event, arg) => {
+        if (arg.success) {
+            handleSuccess('Settings saved.')
+            $scope.settingsOn = false
+        } else {
+            handleError(arg.data)
+        }
+        $scope.savingSettings = false
+    })
+
+    $scope.saveSettings = () => {
+        ipcRenderer.send('async-save-settings', $scope.settings)
+        $scope.savingSettings = true
+    }
+
+    // result handling
+    handleError = (error) => {
+        toastr.error('Something went wrong: ' + error, 'Error')
+    }
+    handleSuccess = (success) => {
+        toastr.success('Settings were successfully saved.', 'Settings')
+    }
+
+    // init
+    let init = () => {
+        $scope.loadSettings()
+    }
+    init()
 })
+

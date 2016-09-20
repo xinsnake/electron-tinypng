@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -50,3 +50,67 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+const fs = require('fs')
+const path = require('path')
+let configDir = app.getPath('userData')
+let settingsFile = configDir + path.sep + 'config.json'
+const defaultConfig = { apiKey: '', numComp: 2 }
+
+ipcMain.on('async-load-settings', (event, arg) => {
+    fs.open(settingsFile, 'wx', (err, fd) => {
+        try {
+            if (err) {
+                if (err.code === 'EEXIST') {
+                    fs.readFile(settingsFile, (err, data) => {
+                        if (err) { throw err }
+
+                        event.sender.send('async-load-settings-reply', {
+                            success: true,
+                            data: JSON.parse(data)
+                        })
+                    })
+                    return
+                } else {
+                    throw err
+                }
+            }
+
+            fs.writeFile(fd, JSON.stringify(defaultConfig), (err) => {
+                if (err) { throw err }
+
+                event.sender.send('async-load-settings-reply', {
+                    success: true,
+                    data: defaultConfig
+                })
+            })
+        } catch (e) {
+            event.sender.send('async-load-settings-reply', {
+                success: false,
+                data: e
+            })
+        }
+    })
+})
+
+ipcMain.on('async-save-settings', (event, arg) => {
+    fs.open(settingsFile, 'w+', (err, fd) => {
+        try {
+            if (err) { throw err }
+
+            fs.writeFile(fd, JSON.stringify(arg), (err) => {
+                if (err) { throw err }
+            })
+
+            event.sender.send('async-save-settings-reply', {
+                success: true,
+                data: null
+            })
+        } catch (e) {
+            event.sender.send('async-save-settings-reply', {
+                success: false,
+                data: e
+            })
+        }
+    })
+})
