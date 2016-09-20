@@ -19,5 +19,16 @@
   ],
   "author": "Xinyun ZHOU <me@xyzhou.com>",
   "license": "MIT",
-  "homepage": "https://bitbucket.org/xinsnake/electron-tinypng#readme"
+  "homepage": "https://bitbucket.org/xinsnake/electron-tinypng#readme",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "jquery": "^3.1.0",
+    "lodash": "^4.16.0",
+    "muicss": "^0.8.0",
+    "ng-file-upload": "^12.2.9",
+    "normalize-css": "^2.3.1"
+  },
+  "devDependencies": {
+    "lodash": "^4.16.0"
+  }
 }
