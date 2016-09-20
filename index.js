@@ -1,9 +1,16 @@
 let app = angular.module('electronTinypng', ['mui', 'ngFileUpload'])
 
 app.controller('mainController', ($scope) => {
-    console.log('mainController');
-})
 
-app.controller('optionController', ($scope) => {
-    console.log('optionController');
+    $scope.settingsOn = false
+
+    $scope.toggleSettings = () => {
+        $scope.settingsOn = !$scope.settingsOn
+    }
+
+    $scope.usage = 'N/A'
+
+    $scope.uploadFiles = (files) => {
+        console.log(files)
+    }
 })

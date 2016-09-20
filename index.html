@@ -17,8 +17,14 @@
             .mui-textfield {
                 margin-bottom: 5px;
             }
+            .mui-container-fluid {
+                max-width: 600px;
+            }
             .mui-panel {
-                padding: 30px;
+                padding: 30px 30px 20px;
+            }
+            .dragover {
+                background: #eee;
             }
         </style>
 
@@ -29,28 +35,37 @@
         <script src="./node_modules/muicss/dist/angular/mui-angular.js"></script>
         <script src="./index.js"></script>
     </head>
-    <body ng-app="electronTinypng" style="background: #666; padding-top: 20px;">
+    <body ng-app="electronTinypng" style="background: #eee; padding-top: 20px;">
         <mui-container fluid>
-            <mui-panel ng-controller="mainController">
+            <mui-panel ng-controller="mainController" style="overflow: hidden;">
+                <div class="mui--text-body1" style="display: flex; height: 100px; justify-content: center;
+                     align-items: center; border: 2px dashed #ccc; margin-bottom: 10px; cursor: pointer;
+                     overflow: hidden;"
+                    ngf-drop="uploadFiles($files)" ngf-multiple="true">
+                    Drop your image(s) here
+                </div>
                 <mui-row>
-                    <mui-col md="5">
-                        <div class="mui--text-body1" style="display: flex; height: 200px; justify-content: center;
-                            align-items: center; border: 2px dashed #ccc; margin-bottom: 20px; cursor: pointer;"
-                            ngf-select ng-model="files" ngf-multiple="true">Drop your image(s) here</div>
+                    <mui-col xs="6" class="mui--text-left">
+                        <mui-button ng-click="toggleSettings()" variant="raised">
+                            <span ng-show="!settingsOn">Show Settings</span>
+                            <span ng-show="settingsOn">Hide Settings</span>
+                        </mui-button>
                     </mui-col>
-                    <mui-col md="7">
-                        <form>
-                            <fieldset style="border: 0; margin: 0; padding: 0;">
-                                <div class="mui--text-body2">Settings</div>
-                                <mui-input ng-model="apiKey" label="TinyPNG API Key *" float-label required></mui-input>
-                                <mui-input ng-model="numComp" label="Number of Compressions *" type="number" float-label requred></mui-input>
-                                <mui-button color="primary">Save</mui-button>
-                            </fieldset>
-                        </form>
+                    <mui-col xs="6" class="mui--text-right" style="height: 48px; line-height: 48px;">
+                        Monthly Usage: <strong>{{usage}}</strong>
                     </mui-col>
                 </mui-row>
-            </mui-panel>
-            <mui-panel>
+                <form ng-show="settingsOn">
+                    <mui-row>
+                        <mui-col xs="6">
+                            <mui-input ng-model="apiKey" label="TinyPNG API Key *" float-label required></mui-input>
+                        </mui-col>
+                        <mui-col xs="6">
+                            <mui-input ng-model="numComp" label="No. of Compressions per Image *" type="number" float-label requred></mui-input>
+                        </mui-col>
+                    </mui-row>
+                    <mui-button color="primary">Save</mui-button>
+                </form>
             </mui-panel>
         </mui-container>
     </body>
