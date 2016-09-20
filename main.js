@@ -56,6 +56,26 @@ const path = require('path')
 let configDir = app.getPath('userData')
 let settingsFile = configDir + path.sep + 'config.json'
 const defaultConfig = { apiKey: '', numComp: 2 }
+let tinify = require("tinify")
+
+validateApiKeySendCount = (event, key) => {
+    tinify.key = key
+
+    tinify.validate((err) => {
+        if (err) {
+            event.sender.send('async-count-update', {
+                success: false,
+                data: err
+            })
+            return
+        }
+
+        event.sender.send('async-count-update', {
+            success: true,
+            data: tinify.compressionCount
+        })
+    })
+}
 
 ipcMain.on('async-load-settings', (event, arg) => {
     fs.open(settingsFile, 'wx', (err, fd) => {
@@ -65,10 +85,16 @@ ipcMain.on('async-load-settings', (event, arg) => {
                     fs.readFile(settingsFile, (err, data) => {
                         if (err) { throw err }
 
+                        let config = JSON.parse(data)
+
                         event.sender.send('async-load-settings-reply', {
                             success: true,
-                            data: JSON.parse(data)
+                            data: config
                         })
+
+                        if (config.apiKey.length > 10) {
+                            validateApiKeySendCount(event, config.apiKey)
+                        }
                     })
                     return
                 } else {
@@ -102,6 +128,10 @@ ipcMain.on('async-save-settings', (event, arg) => {
                 if (err) { throw err }
             })
 
+            if (typeof arg.apiKey === 'string' && arg.apiKey.length > 10) {
+                validateApiKeySendCount(event, arg.apiKey)
+            }
+
             event.sender.send('async-save-settings-reply', {
                 success: true,
                 data: null
@@ -114,3 +144,4 @@ ipcMain.on('async-save-settings', (event, arg) => {
         }
     })
 })
+

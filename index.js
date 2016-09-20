@@ -24,6 +24,16 @@ app.controller('mainController', ($scope, toastr) => {
     // usage number
     $scope.usage = 'N/A'
 
+    ipcRenderer.on('async-count-update', (event, arg) => {
+        if (arg.success) {
+            $scope.$apply(() => {
+                $scope.usage = arg.data
+            })
+        } else {
+            handleError(arg.data)
+        }
+    })
+
     // upload handler
     $scope.uploadFiles = (files) => {
         console.log(files)
@@ -42,7 +52,9 @@ app.controller('mainController', ($scope, toastr) => {
 
     ipcRenderer.on('async-load-settings-reply', (event, arg) => {
         if (arg.success) {
-            $scope.settings = arg.data
+            $scope.$apply(() => {
+                $scope.settings = arg.data
+            })
         } else {
             handleError(arg.data)
         }
@@ -69,7 +81,12 @@ app.controller('mainController', ($scope, toastr) => {
 
     // result handling
     handleError = (error) => {
-        toastr.error('Something went wrong: ' + error, 'Error')
+        console.error(error)
+        if (typeof error.message !== 'undefined') {
+            toastr.error('Something went wrong: ' + error.message, 'Error')
+        } else {
+            toastr.error('Something went wrong: ' + error, 'Error')
+        }
     }
     handleSuccess = (success) => {
         toastr.success('Settings were successfully saved.', 'Settings')
