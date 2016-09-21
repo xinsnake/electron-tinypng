@@ -5,7 +5,9 @@ A really simple Electron desktop application to use TinyPNG.
 It is able to compress JPG and PNG files, and it requires an API key from
 TinyPNG website.
 
-# Screenshot
+# Screencast
+
+![Screencast](https://github.com/xinsnake/electron-tinypng/blob/master/screencast.gif?raw=true)
 
 # Installation
 
