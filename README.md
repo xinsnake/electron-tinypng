@@ -11,6 +11,7 @@ TinyPNG website.
 
 # Installation
 
-Download the binary package that suits your system and start to use it. Or if
-you like to compile it yourself, clone the repository and use
-`electron-packager` to package it yourself.
+[Download the binary](https://github.com/xinsnake/electron-tinypng/releases)
+package that suits your system and start to use it. Or if you like to compile
+it yourself, clone the repository and use `electron-packager` to package it
+yourself.
