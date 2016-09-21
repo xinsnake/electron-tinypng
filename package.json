@@ -33,6 +33,7 @@
     "tinify": "^1.3.0"
   },
   "devDependencies": {
+    "electron-prebuilt": "^1.4.0",
     "lodash": "^4.16.0"
   }
 }
