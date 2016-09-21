@@ -16,13 +16,19 @@
         <script src="./node_modules/muicss/dist/angular/mui-angular.js"></script>
         <script src="./index.js"></script>
     </head>
-    <body ng-app="electronTinypng" style="background: #eee; padding-top: 20px;">
+    <body ng-app="electronTinypng" style="background: #eee; padding-top: 20px;" ng-controller="mainController">
         <mui-container fluid>
-            <mui-panel ng-controller="mainController" style="overflow: hidden;">
+            <mui-panel style="overflow: hidden;">
+                <mui-row>
+                    <mui-col sm="6" class="mui--text-left">
+                    </mui-col>
+                    <mui-col sm="6" class="mui--text-left">
+                    </mui-col>
+                </mui-row>
                 <div class="mui--text-body1" style="display: flex; height: 100px; justify-content: center;
                      align-items: center; border: 2px dashed #ccc; margin-bottom: 10px; cursor: pointer;
                      overflow: hidden;"
-                    ngf-drop="uploadFiles($files)" ngf-multiple="true">
+                    ngf-drop="compressFiles($files)" ngf-multiple="true">
                     Drop your image(s) here
                 </div>
                 <mui-row>
@@ -36,18 +42,35 @@
                         Monthly Usage: <strong>{{usage}}</strong>
                     </mui-col>
                 </mui-row>
-                <form ng-show="settingsOn">
+                <form ng-show="settingsOn" style="padding-top: 10px;">
                     <mui-row>
                         <mui-col xs="6">
                             <mui-input ng-model="settings.apiKey" label="TinyPNG API Key *" type="text" required ng-disabled="savingSettings"></mui-input>
                         </mui-col>
-                        <mui-col xs="6">
+                        <mui-col xs="6" class="ng-hide">
                             <mui-input ng-model="settings.numComp" label="No. of Compressions per Image *" type="number" requred ng-disabled="savingSettings"></mui-input>
                         </mui-col>
                     </mui-row>
                     <mui-button color="primary" ng-click="saveSettings()">Save</mui-button>
                 </form>
             </mui-panel>
+            <mui-panel ng-show="filesToCompress.length > 0">
+                <div class="file-to-compress status-{{f.status}}" ng-repeat="f in filesToCompress | orderBy: '-timeAdded'" title="{{f.path}}">
+                    <span class="status-text">{{f.status}}</span>
+                    <span class="name-text">{{f.name}}</span>
+                    <span class="size-text">Before: {{f.readableSize}}</span>
+                    <span class="compressed-size-text" ng-show="f.readableSizeCompressed">After: {{f.readableSizeCompressed}}</span>
+                </div>
+            </mui-panel>
+            <mui-row style="color: #999;">
+                <mui-col sm="6" class="mui--text-left">
+                    Powered by <a href="https://tinypng.com" target="_blank">
+                        <img src="./tinypng-logo.png" alt="" style="width: 125px; height: 19px; display: inline-block; margin: 0 5px;"></a>
+                </mui-col>
+                <mui-col sm="6" class="mui--text-right">
+                    v0.1.0, 2016 &copy; <a href="https://xyzhou.com" target="_blank" style="color: #666">Xinyun Zhou</a>
+                </mui-col>
+            </mui-row>
         </mui-container>
     </body>
 </html>

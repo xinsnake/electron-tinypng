@@ -1,4 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
+const shell = require('electron').shell
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -12,10 +13,20 @@ function createWindow () {
     win.loadURL(`file://${__dirname}/index.html`)
 
     // remove menu
-    // win.setMenu(null)
+    win.setMenu(null)
 
     // Open the DevTools.
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
+
+    // Stop it from navigating away
+    let handleRedirect = (e, url) => {
+        if (url !== win.webContents.getURL()) {
+            e.preventDefault()
+            shell.openExternal(url)
+        }
+    }
+    win.webContents.on('will-navigate', handleRedirect)
+    win.webContents.on('new-window', handleRedirect)
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -57,6 +68,7 @@ let configDir = app.getPath('userData')
 let settingsFile = configDir + path.sep + 'config.json'
 const defaultConfig = { apiKey: '', numComp: 2 }
 let tinify = require("tinify")
+const filesize = require('filesize')
 
 validateApiKeySendCount = (event, key) => {
     tinify.key = key
@@ -75,6 +87,11 @@ validateApiKeySendCount = (event, key) => {
             data: tinify.compressionCount
         })
     })
+}
+
+getFilesize = (filepath) => {
+    let stats = fs.statSync(filepath)
+    return stats.size
 }
 
 ipcMain.on('async-load-settings', (event, arg) => {
@@ -145,3 +162,28 @@ ipcMain.on('async-save-settings', (event, arg) => {
     })
 })
 
+ipcMain.on('async-compress-file', (event, arg) => {
+    tinify.fromFile(arg.path).toFile(arg.path, (err) => {
+        if (err) {
+            arg.status = 'Error'
+            event.sender.send('async-compress-file-reply', {
+                success: false,
+                data: arg
+            })
+            return
+        }
+
+        arg.status = 'Compressed'
+        arg.sizeCompressed = getFilesize(arg.path)
+        arg.readableSizeCompressed = filesize(getFilesize(arg.path))
+        event.sender.send('async-compress-file-reply', {
+            success: true,
+            data: arg
+        })
+
+        event.sender.send('async-count-update', {
+            success: true,
+            data: tinify.compressionCount
+        })
+    })
+})
