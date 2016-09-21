@@ -7,11 +7,13 @@
         <link rel="stylesheet" href="./node_modules/angular/angular-csp.css">
         <link rel="stylesheet" href="./node_modules/angular-toastr/dist/angular-toastr.css">
         <link rel="stylesheet" href="./node_modules/muicss/dist/css/mui.css">
+        <link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" href="./index.css">
         <script src="./node_modules/angular/angular.js"></script>
         <script src="./node_modules/ng-file-upload/dist/ng-file-upload.js"></script>
         <script src="./node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script>
         <script src="./node_modules/muicss/dist/angular/mui-angular.js"></script>
+        <script src="./node_modules/filesize/lib/filesize.es6.js"></script>
         <script src="./index.js"></script>
     </head>
     <body ng-app="electronTinypng" style="background: #eee; padding-top: 20px;" ng-controller="mainController">
@@ -27,17 +29,16 @@
                      align-items: center; border: 2px dashed #ccc; margin-bottom: 10px; cursor: pointer;
                      overflow: hidden;"
                     ngf-drop="compressFiles($files)" ngf-multiple="true">
-                    Drop your image(s) here
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>&nbsp; Drop your image(s) here
                 </div>
                 <mui-row>
-                    <mui-col xs="6" class="mui--text-left">
-                        <mui-button ng-click="toggleSettings()" variant="raised">
-                            <span ng-show="!settingsOn">Show Settings</span>
-                            <span ng-show="settingsOn">Hide Settings</span>
-                        </mui-button>
-                    </mui-col>
-                    <mui-col xs="6" class="mui--text-right" style="height: 48px; line-height: 48px;">
+                    <mui-col xs="6" class="mui--text-left" style="height: 48px; line-height: 48px;">
                         Monthly Usage: <strong>{{usage}}</strong>
+                    </mui-col>
+                    <mui-col xs="6" class="mui--text-right">
+                        <mui-button ng-click="toggleSettings()" variant="raised">
+                            <i class="fa fa-cog" aria-hidden="true"></i>
+                        </mui-button>
                     </mui-col>
                 </mui-row>
                 <form ng-show="settingsOn" style="padding-top: 10px;">
@@ -54,10 +55,14 @@
             </mui-panel>
             <mui-panel ng-show="filesToCompress.length > 0">
                 <div class="file-to-compress status-{{f.status}}" ng-repeat="f in filesToCompress | orderBy: '-timeAdded'" title="{{f.path}}">
-                    <span class="status-text">{{f.status}}</span>
-                    <span class="name-text">{{f.name}}</span>
-                    <span class="size-text">Before: {{f.readableSize}}</span>
-                    <span class="compressed-size-text" ng-show="f.readableSizeCompressed">After: {{f.readableSizeCompressed}}</span>
+                    <span class="status-text" style="margin-right: 3px;">
+                        <i class="fa fa-circle-o-notch fa-spin fa-fw" ng-show="f.status === 'Pending'"></i>
+                        <i class="fa fa-check fa-fw" aria-hidden="true" ng-show="f.status === 'Compressed'"></i>
+                        <i class="fa fa-exclamation-triangle fa-fw" aria-hidden="true" ng-show="f.status === 'Error'"></i>
+                    </span>
+                    <span class="name-text"><a href="file://{{f.path}}" target="_blank"><strong>{{f.name}}</strong></a></span>
+                    <span class="size-text">{{f.readableSize}}</span>
+                    <span class="compressed-size-text" ng-show="f.readableSizeCompressed">{{f.readableSizeCompressed}}</span>
                 </div>
             </mui-panel>
             <mui-row style="color: #999;">

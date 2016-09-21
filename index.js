@@ -1,6 +1,4 @@
-const {ipcRenderer} = require('electron')
-const shell = require('electron').shell
-const filesize = require('filesize')
+const {ipcRenderer, shell} = require('electron')
 
 // disable accidental drop a file in there
 document.addEventListener('dragover', (event) => {

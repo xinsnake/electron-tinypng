@@ -44,6 +44,13 @@ body, html {
     border: 1px solid #50bf72;
     background: #eaf9ea;
 }
+.file-to-compress.status-Compressed .size-text {
+    color: #fb5050;
+    text-decoration: line-through;
+}
+.file-to-compress.status-Compressed .compressed-size-text {
+    color: #50bf72;
+}
 .file-to-compress.status-Error {
     border: 1px solid #bf5050;
     background: #f9dede;
