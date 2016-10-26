@@ -70,7 +70,7 @@ app.controller('mainController', ($scope, toastr) => {
             ipcRenderer.send('async-compress-file', f)
             // console.log(f)
             $scope.filesToCompress.push(f)
-            $scope.filesToCompress = $scope.filesToCompress.slice(0, 100)
+            $scope.filesToCompress = $scope.filesToCompress.slice(-100)
         })
     }
 
